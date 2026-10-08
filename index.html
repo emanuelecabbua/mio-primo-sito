@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC ReviewCards - Moltiplica le tue recensioni Google</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        google: {
+                            blue: '#4285F4',
+                            red: '#EA4335',
+                            yellow: '#FBBC05',
+                            green: '#34A853',
+                            gray: '#F8F9FA',
+                            dark: '#202124'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        
+        /* Custom scrollbar for cart */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <header class="fixed w-full bg-white/90 backdrop-blur-md border-b border-gray-100 z-40 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="text-2xl font-extrabold text-gray-900 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-google-blue flex items-center justify-center text-white">
+                            <i class="fa-solid fa-wifi rotate-90"></i>
+                        </div>
+                        <span class="text-google-dark">Review<span class="text-google-blue">Cards</span></span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#come-funziona" class="text-gray-600 font-medium hover:text-google-blue transition">Come Funziona</a>
+                    <a href="#pacchetti" class="text-gray-600 font-medium hover:text-google-blue transition">Pacchetti</a>
+                    <a href="#contatti" class="text-gray-600 font-medium hover:text-google-blue transition">Contatti</a>
+                </nav>
+
+                <!-- Cart Icon -->
+                <div class="flex items-center">
+                    <button id="cart-btn" class="relative p-2 text-gray-700 hover:text-google-blue transition group">
+                        <i class="fa-solid fa-cart-shopping text-2xl group-hover:scale-110 transition-transform"></i>
+                        <span id="cart-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-google-red rounded-full hidden shadow-sm">
+                            0
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-20">
+        
+        <!-- Hero Section -->
+        <section class="relative bg-white overflow-hidden">
+            <!-- Decorative background elements -->
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full max-w-7xl overflow-hidden -z-10 pointer-events-none">
+                <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-70"></div>
+                <div class="absolute top-1/2 -left-24 w-72 h-72 bg-green-50 rounded-full blur-3xl opacity-70"></div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-google-blue font-semibold text-sm mb-6">
+                        <i class="fa-solid fa-bolt"></i> Tecnologia NFC Integrata
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-google-dark leading-tight mb-6">
+                        Ottieni recensioni a 5 stelle con un <span class="text-transparent bg-clip-text bg-gradient-to-r from-google-blue to-purple-600">semplice tap.</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto lg:mx-0">
+                        Nessun link da cercare, nessun QR code sfocato. Avvicina la nostra Card NFC allo smartphone del tuo cliente e chiedi una recensione su Google istantaneamente.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#pacchetti" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-google-blue rounded-xl hover:bg-blue-600 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-1">
+                            Scopri le Offerte
+                        </a>
+                        <a href="#come-funziona" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all">
+                            Come funziona
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 relative flex justify-center animate-float">
+                    <!-- Stylized NFC Card Graphic -->
+                    <div class="relative w-80 h-120 bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl shadow-2xl p-8 flex flex-col justify-between border-4 border-gray-700 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                        <div class="flex justify-between items-start">
+                            <div class="text-white font-bold text-xl flex items-center gap-2">
+                                <i class="fa-brands fa-google text-2xl"></i> Review
+                            </div>
+                            <i class="fa-solid fa-wifi rotate-90 text-gray-400 text-3xl"></i>
+                        </div>
+                        <div class="text-center">
+                            <i class="fa-solid fa-star text-google-yellow text-5xl mb-4"></i>
+                            <h3 class="text-white font-bold text-2xl">Lasciaci una recensione!</h3>
+                            <p class="text-gray-400 mt-2 text-sm">Avvicina il tuo smartphone qui</p>
+                        </div>
+                        <div class="w-full h-12 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <span class="text-gray-300 text-sm font-medium">NFC Tag Inside</span>
+                        </div>
+                    </div>
+                    <!-- Ripple effect decoration -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border-2 border-blue-400/20 rounded-full animate-ping -z-10" style="animation-duration: 3s;"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="come-funziona" class="py-20 bg-google-gray border-t border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-google-dark">3 Passi per il Successo</h2>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Non serve scaricare nessuna app. Le nostre card NFC comunicano nativamente con il 99% degli smartphone moderni.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 relative">
+                    <!-- Connector line (Desktop only) -->
+                    <div class="hidden md:block absolute top-1/2 left-[15%] right-[15%] h-0.5 bg-gray-200 -z-10"></div>
+                    
+                    <!-- Step 1 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center relative z-10 hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 mx-auto bg-google-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-blue-500/30">1</div>
+                        <h3 class="text-xl font-bold mb-3 text-google-dark">Fai Tap</h3>
+                        <p class="text-gray-600">Il cliente avvicina il suo smartphone alla tua nuova Review Card NFC.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center relative z-10 hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 mx-auto bg-google-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-blue-500/30">2</div>
+                        <h3 class="text-xl font-bold mb-3 text-google-dark">Pop-up Magico</h3>
+                        <p class="text-gray-600">Sullo schermo del cliente si apre automaticamente la tua pagina Google.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center relative z-10 hover:shadow-md transition-shadow">
+                        <div class="w-16 h-16 mx-auto bg-google-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-blue-500/30">3</div>
+                        <h3 class="text-xl font-bold mb-3 text-google-dark">Recensione a 5 Stelle</h3>
+                        <p class="text-gray-600">Il cliente deve solo cliccare le stelle e lasciare un commento. Fatto!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pacchetti" class="py-24 bg-white relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-google-dark">Scegli il Pacchetto Ideale</h2>
+                    <p class="mt-4 text-xl text-gray-600">Più card acquisti, più risparmi. Personalizzazione inclusa nel prezzo.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+                    
+                    <!-- Pack: Singola -->
+                    <div class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col hover:border-google-blue hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-xl font-semibold text-gray-500 mb-2">Per iniziare</h3>
+                        <div class="text-3xl font-bold text-google-dark mb-4">Card Singola</div>
+                        <div class="flex items-baseline gap-1 mb-6 border-b border-gray-100 pb-6">
+                            <span class="text-4xl font-extrabold text-google-dark">5€</span>
+                            <span class="text-gray-500">/cad</span>
+                        </div>
+                        <ul class="flex-grow space-y-4 mb-8">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">1 Card NFC</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">Programmazione inclusa</span></li>
+                        </ul>
+                        <button class="add-to-cart-btn w-full bg-white border-2 border-gray-900 text-gray-900 font-bold py-3 rounded-xl hover:bg-gray-900 hover:text-white transition flex items-center justify-center gap-2" 
+                            data-id="card-1" data-name="Card Singola NFC" data-price="5">
+                            Aggiungi al Carrello
+                        </button>
+                    </div>
+
+                    <!-- Pack: 12 Cards -->
+                    <div class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col hover:border-google-blue hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-xl font-semibold text-google-blue mb-2">Piccoli Team</h3>
+                        <div class="text-3xl font-bold text-google-dark mb-4">Pacchetto 12</div>
+                        <div class="flex items-baseline gap-1 mb-6 border-b border-gray-100 pb-6">
+                            <span class="text-4xl font-extrabold text-google-dark">45€</span>
+                            <span class="text-gray-500">totali</span>
+                        </div>
+                        <ul class="flex-grow space-y-4 mb-8">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">12 Card NFC</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">Solo 3,75€ a card</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">Spedizione Standard</span></li>
+                        </ul>
+                        <button class="add-to-cart-btn w-full bg-gray-100 text-gray-900 font-bold py-3 rounded-xl hover:bg-gray-200 transition flex items-center justify-center gap-2" 
+                            data-id="pack-12" data-name="Pacchetto 12 Card" data-price="45">
+                            Aggiungi al Carrello
+                        </button>
+                    </div>
+
+                    <!-- Pack: 25 Cards (Most Popular) -->
+                    <div class="bg-google-dark rounded-3xl p-8 flex flex-col relative transform lg:-translate-y-4 shadow-2xl shadow-gray-900/40 border-2 border-gray-900">
+                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-google-yellow to-yellow-500 text-gray-900 text-sm font-black px-4 py-1 rounded-full uppercase tracking-wider">
+                            Più Venduto
+                        </div>
+                        <h3 class="text-xl font-semibold text-google-yellow mb-2 mt-2">Negozi & Ristoranti</h3>
+                        <div class="text-3xl font-bold text-white mb-4">Pacchetto 25</div>
+                        <div class="flex items-baseline gap-1 mb-6 border-b border-gray-700 pb-6">
+                            <span class="text-4xl font-extrabold text-white">60€</span>
+                            <span class="text-gray-400">totali</span>
+                        </div>
+                        <ul class="flex-grow space-y-4 mb-8 text-white">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-yellow mt-1"></i> <span class="text-gray-300">25 Card NFC</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-yellow mt-1"></i> <span class="text-gray-300">Solo 2,40€ a card</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-yellow mt-1"></i> <span class="text-gray-300">Spedizione Gratuita</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-yellow mt-1"></i> <span class="text-gray-300">QR Code fallback</span></li>
+                        </ul>
+                        <button class="add-to-cart-btn w-full bg-google-blue text-white font-bold py-4 rounded-xl hover:bg-blue-500 transition shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2" 
+                            data-id="pack-25" data-name="Pacchetto 25 Card" data-price="60">
+                            Aggiungi al Carrello
+                        </button>
+                    </div>
+
+                    <!-- Pack: 50 Cards -->
+                    <div class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col hover:border-google-blue hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-xl font-semibold text-purple-600 mb-2">Aziende & Franchising</h3>
+                        <div class="text-3xl font-bold text-google-dark mb-4">Pacchetto 50</div>
+                        <div class="flex items-baseline gap-1 mb-6 border-b border-gray-100 pb-6">
+                            <span class="text-4xl font-extrabold text-google-dark">95€</span>
+                            <span class="text-gray-500">totali</span>
+                        </div>
+                        <ul class="flex-grow space-y-4 mb-8">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">50 Card NFC</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">Miglior prezzo (1,90€/cad)</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-google-green mt-1"></i> <span class="text-gray-600">Spedizione Espresso</span></li>
+                        </ul>
+                        <button class="add-to-cart-btn w-full bg-gray-100 text-gray-900 font-bold py-3 rounded-xl hover:bg-gray-200 transition flex items-center justify-center gap-2" 
+                            data-id="pack-50" data-name="Pacchetto 50 Card" data-price="95">
+                            Aggiungi al Carrello
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="contatti" class="bg-white border-t border-gray-200 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-google-blue flex items-center justify-center text-white">
+                        <i class="fa-solid fa-wifi rotate-90"></i>
+                    </div>
+                    <span class="text-xl font-extrabold text-google-dark">Review<span class="text-google-blue">Cards</span></span>
+                </div>
+                <div class="flex gap-6 text-sm font-medium text-gray-500">
+                    <a href="#" class="hover:text-google-blue transition">Privacy</a>
+                    <a href="#" class="hover:text-google-blue transition">Termini</a>
+                    <a href="#" class="hover:text-google-blue transition">Supporto</a>
+                </div>
+                <div class="text-sm text-gray-400">
+                    &copy; 2026 ReviewCards. Made in Italy.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay for Sidebar -->
+    <div id="cart-overlay" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-[50] hidden opacity-0 transition-opacity duration-300"></div>
+    
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full sm:w-[400px] bg-white shadow-2xl z-[60] transform translate-x-full flex flex-col transition-transform duration-300 ease-in-out">
+        <!-- Header -->
+        <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-white">
+            <h2 class="text-xl font-bold text-google-dark flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-blue-50 text-google-blue flex items-center justify-center">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                Carrello
+            </h2>
+            <button id="close-cart-btn" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        
+        <!-- Cart Items Container -->
+        <div class="flex-grow p-6 overflow-y-auto bg-gray-50/50" id="cart-items-container">
+            <!-- Handled by JS -->
+        </div>
+
+        <!-- Footer / Checkout -->
+        <div class="p-6 border-t border-gray-100 bg-white">
+            <div class="space-y-3 mb-6">
+                <div class="flex justify-between items-center text-gray-500">
+                    <span>Subtotale</span>
+                    <span id="cart-subtotal">0,00 €</span>
+                </div>
+                <div class="flex justify-between items-center text-gray-500">
+                    <span>Spedizione</span>
+                    <span class="text-google-green text-sm font-medium">Gratuita</span>
+                </div>
+                <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+                    <span class="text-lg font-semibold text-google-dark">Totale</span>
+                    <span class="text-2xl font-bold text-google-dark" id="cart-total">0,00 €</span>
+                </div>
+            </div>
+            
+            <button id="checkout-btn" class="w-full bg-google-dark text-white font-bold py-4 rounded-xl hover:bg-black transition shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span>Completa l'Ordine</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Success Modal (Instead of Alert) -->
+    <div id="success-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[70] hidden items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 text-center transform scale-95 transition-transform duration-300 shadow-2xl" id="success-modal-content">
+            <div class="w-24 h-24 mx-auto bg-green-50 rounded-full flex items-center justify-center mb-6 relative">
+                <div class="absolute inset-0 bg-google-green/20 rounded-full animate-ping"></div>
+                <i class="fa-solid fa-check text-5xl text-google-green relative z-10"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-google-dark mb-3">Ordine Confermato!</h3>
+            <p class="text-gray-600 mb-8 leading-relaxed">
+                Il tuo ordine è stato processato con successo. Riceverai a breve un'email per la personalizzazione delle tue card.
+            </p>
+            <button id="close-success-btn" class="w-full bg-google-blue text-white font-bold py-3.5 rounded-xl hover:bg-blue-600 transition shadow-md">
+                Torna al sito
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cart State
+            let cart = [];
+            
+            // DOM References
+            const cartBtn = document.getElementById('cart-btn');
+            const closeCartBtn = document.getElementById('close-cart-btn');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartOverlay = document.getElementById('cart-overlay');
+            const cartBadge = document.getElementById('cart-badge');
+            const cartItemsContainer = document.getElementById('cart-items-container');
+            const cartSubtotalEl = document.getElementById('cart-subtotal');
+            const cartTotalEl = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            
+            // Modal References
+            const successModal = document.getElementById('success-modal');
+            const closeSuccessBtn = document.getElementById('close-success-btn');
+            const successModalContent = document.getElementById('success-modal-content');
+
+            // Format Currency
+            const formatPrice = (price) => {
+                return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(price);
+            };
+
+            // Main Update Function
+            function updateCartUI() {
+                let totalItems = 0;
+                let totalPrice = 0;
+                
+                cart.forEach(item => {
+                    totalItems += item.quantity;
+                    totalPrice += item.price * item.quantity;
+                });
+
+                // Badge
+                if (totalItems > 0) {
+                    cartBadge.textContent = totalItems;
+                    cartBadge.classList.remove('hidden');
+                } else {
+                    cartBadge.classList.add('hidden');
+                }
+
+                // Prices
+                const formattedTotal = formatPrice(totalPrice);
+                cartSubtotalEl.textContent = formattedTotal;
+                cartTotalEl.textContent = formattedTotal;
+
+                // Checkout Button
+                checkoutBtn.disabled = cart.length === 0;
+
+                renderCartItems();
+            }
+
+            // Render Items in Sidebar
+            function renderCartItems() {
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = `
+                        <div class="h-full flex flex-col items-center justify-center text-gray-400">
+                            <i class="fa-solid fa-basket-shopping text-5xl mb-4 text-gray-200"></i>
+                            <p class="font-medium">Il tuo carrello è vuoto.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                cartItemsContainer.innerHTML = '<div class="space-y-4"></div>';
+                const listContainer = cartItemsContainer.querySelector('div');
+                
+                cart.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex gap-4 items-center';
+                    itemEl.innerHTML = `
+                        <!-- Placeholder image block -->
+                        <div class="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-wifi rotate-90 text-google-blue text-xl"></i>
+                        </div>
+                        
+                        <div class="flex-grow min-w-0">
+                            <h4 class="font-bold text-gray-900 truncate">${item.name}</h4>
+                            <div class="text-google-blue font-semibold text-sm">${formatPrice(item.price)}</div>
+                            
+                            <!-- Quantity Controls -->
+                            <div class="flex items-center gap-3 mt-2">
+                                <div class="flex items-center bg-gray-50 border border-gray-200 rounded-lg">
+                                    <button class="qty-btn minus w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-900 transition" data-id="${item.id}">-</button>
+                                    <span class="w-6 text-center text-sm font-medium">${item.quantity}</span>
+                                    <button class="qty-btn plus w-7 h-7 flex items-center justify-center text-gray-500 hover:text-gray-900 transition" data-id="${item.id}">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col items-end gap-2">
+                            <button class="remove-item-btn text-gray-300 hover:text-google-red transition p-1" data-id="${item.id}" title="Rimuovi">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                            <div class="font-bold text-gray-900">${formatPrice(item.price * item.quantity)}</div>
+                        </div>
+                    `;
+                    listContainer.appendChild(itemEl);
+                });
+
+                attachCartEventListeners();
+            }
+
+            // Logic Actions
+            function addToCart(id, name, price) {
+                const existingItem = cart.find(item => item.id === id);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ id, name, price: parseFloat(price), quantity: 1 });
+                }
+                updateCartUI();
+                openSidebar();
+            }
+
+            function updateQuantity(id, delta) {
+                const item = cart.find(item => item.id === id);
+                if (item) {
+                    item.quantity += delta;
+                    if (item.quantity <= 0) {
+                        cart = cart.filter(i => i.id !== id);
+                    }
+                    updateCartUI();
+                }
+            }
+
+            function removeFromCart(id) {
+                cart = cart.filter(item => item.id !== id);
+                updateCartUI();
+            }
+
+            // Attach dynamic listeners inside cart
+            function attachCartEventListeners() {
+                document.querySelectorAll('.qty-btn.plus').forEach(btn => {
+                    btn.addEventListener('click', (e) => updateQuantity(e.currentTarget.dataset.id, 1));
+                });
+                
+                document.querySelectorAll('.qty-btn.minus').forEach(btn => {
+                    btn.addEventListener('click', (e) => updateQuantity(e.currentTarget.dataset.id, -1));
+                });
+
+                document.querySelectorAll('.remove-item-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => removeFromCart(e.currentTarget.dataset.id));
+                });
+            }
+
+            // UI Actions
+            function openSidebar() {
+                cartOverlay.classList.remove('hidden');
+                // Force reflow
+                void cartOverlay.offsetWidth;
+                cartOverlay.classList.remove('opacity-0');
+                cartSidebar.classList.remove('translate-x-full');
+            }
+
+            function closeSidebar() {
+                cartOverlay.classList.add('opacity-0');
+                cartSidebar.classList.add('translate-x-full');
+                setTimeout(() => {
+                    cartOverlay.classList.add('hidden');
+                }, 300);
+            }
+
+            function openSuccessModal() {
+                successModal.classList.remove('hidden');
+                successModal.classList.add('flex');
+                void successModal.offsetWidth;
+                successModal.classList.remove('opacity-0');
+                successModalContent.classList.remove('scale-95');
+                successModalContent.classList.add('scale-100');
+            }
+
+            function closeSuccessModal() {
+                successModal.classList.add('opacity-0');
+                successModalContent.classList.remove('scale-100');
+                successModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    successModal.classList.add('hidden');
+                    successModal.classList.remove('flex');
+                }, 300);
+            }
+
+            // Event Listeners Initialization
+            addToCartButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const { id, name, price } = e.currentTarget.dataset;
+                    addToCart(id, name, price);
+                });
+            });
+
+            cartBtn.addEventListener('click', openSidebar);
+            closeCartBtn.addEventListener('click', closeSidebar);
+            cartOverlay.addEventListener('click', closeSidebar);
+
+            checkoutBtn.addEventListener('click', () => {
+                if (cart.length > 0) {
+                    cart = [];
+                    updateCartUI();
+                    closeSidebar();
+                    setTimeout(openSuccessModal, 350); // Show modal after sidebar closes
+                }
+            });
+
+            closeSuccessBtn.addEventListener('click', closeSuccessModal);
+            
+            successModal.addEventListener('click', (e) => {
+                if (e.target === successModal) closeSuccessModal();
+            });
+
+            // Initialize empty cart
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
